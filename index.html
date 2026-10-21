@@ -1,166 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IncidentIQ helps investigate application logs, trace errors, and identify potential root causes.">
-    <title>IncidentIQ | Incident Investigator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="IncidentIQ is a browser-based application log investigation dashboard.">
+  <title>IncidentIQ — Incident Investigator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-
+  <div class="app-shell">
     <header class="topbar">
-        <a href="#" class="brand">Incident<span>IQ</span></a>
-        <p class="brand-description">Production Incident Investigator</p>
-        <div class="status">
-            <span class="status-dot"></span>
-            Local Workspace
-        </div>
+      <a class="brand" href="#" aria-label="IncidentIQ home">
+        <span class="brand-mark">IQ</span>
+        <span>Incident<span class="brand-light">IQ</span></span>
+      </a>
+      <div class="topbar-right">
+        <span class="live-dot"></span><span class="muted">Local investigation workspace</span>
+        <button id="loadSampleBtn" class="button button-quiet" type="button">Load sample data</button>
+      </div>
     </header>
 
     <main class="container">
-
-        <section class="welcome">
-            <p class="eyebrow">OBSERVABILITY PLATFORM</p>
-            <h1>Understand what went wrong.</h1>
-            <p>Investigate logs, trace failures, and uncover potential root causes.</p>
-        </section>
-
-        <section class="stats">
-            <article class="stat-card">
-                <p>Total Events</p>
-                <h2 id="totalEvents">0</h2>
-                <span>Parsed log entries</span>
-            </article>
-
-            <article class="stat-card">
-                <p>Errors</p>
-                <h2 id="errorCount" class="red-text">0</h2>
-                <span>Requires investigation</span>
-            </article>
-
-            <article class="stat-card">
-                <p>Warnings</p>
-                <h2 id="warningCount" class="yellow-text">0</h2>
-                <span>Potential issues</span>
-            </article>
-
-            <article class="stat-card">
-                <p>Services Affected</p>
-                <h2 id="serviceCount">0</h2>
-                <span>Unique services detected</span>
-            </article>
-        </section>
-
-        <section class="panel upload-panel">
-            <div class="upload-info">
-                <div class="upload-icon">↑</div>
-                <div>
-                    <h2>Import log files</h2>
-                    <p>Upload a .log or .txt file to begin your investigation.</p>
-                </div>
-            </div>
-
-            <label for="logFile" class="primary-button">
-                + Upload Logs
-            </label>
-            <input type="file" id="logFile" accept=".log,.txt" hidden>
-        </section>
-
-        <div id="fileStatus" class="file-status" role="status">
-            No log file loaded.
+      <section class="hero">
+        <div>
+          <p class="eyebrow">OBSERVABILITY WORKSPACE</p>
+          <h1>Understand what went wrong.</h1>
+          <p class="hero-copy">Explore application logs, correlate failures, and build an evidence-based incident timeline.</p>
         </div>
+        <div class="hero-status"><span class="status-indicator"></span><span id="workspaceStatus">Waiting for logs</span></div>
+      </section>
 
-        <section class="panel explorer-panel">
-            <div class="section-heading">
-                <div>
-                    <h2>Log Explorer</h2>
-                    <p>Search and filter application events.</p>
-                </div>
-                <span id="resultCount" class="count-label">0 events</span>
-            </div>
+      <section class="stats-grid" aria-label="Log statistics">
+        <article class="stat-card">
+          <div class="stat-top"><span>Total events</span><span class="stat-icon">≋</span></div>
+          <strong id="totalEvents">0</strong><small>Parsed log entries</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Errors</span><span class="stat-icon icon-red">!</span></div>
+          <strong id="errorCount">0</strong><small>Events needing attention</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Warnings</span><span class="stat-icon icon-amber">△</span></div>
+          <strong id="warningCount">0</strong><small>Potential issues</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Services affected</span><span class="stat-icon icon-purple">⌘</span></div>
+          <strong id="serviceCount">0</strong><small>Unique services detected</small>
+        </article>
+      </section>
 
-            <div class="filters">
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="Search messages, services, errors..."
-                    aria-label="Search log events"
-                >
+      <section class="panel upload-panel">
+        <div class="upload-symbol">↑</div>
+        <div class="upload-copy">
+          <h2>Import log files</h2>
+          <p>Choose a <code>.log</code> or <code>.txt</code> file from your computer.</p>
+          <p class="format-hint">Expected: <code>2026-10-21 10:02:01 ERROR database Connection pool exhausted</code></p>
+        </div>
+        <div class="upload-actions">
+          <label for="logFile" class="button button-primary">Upload logs</label>
+          <input id="logFile" type="file" accept=".log,.txt,text/plain" hidden>
+        </div>
+      </section>
+      <div id="fileStatus" class="file-status" role="status" aria-live="polite">No log file loaded. Load sample data to try IncidentIQ.</div>
 
-                <select id="severityFilter" aria-label="Filter by severity">
-                    <option value="ALL">All severities</option>
-                    <option value="ERROR">Errors</option>
-                    <option value="WARN">Warnings</option>
-                    <option value="INFO">Info</option>
-                    <option value="DEBUG">Debug</option>
-                </select>
+      <section class="panel explorer-panel">
+        <div class="section-heading">
+          <div><h2>Log Explorer</h2><p>Search and filter application events.</p></div>
+          <span id="resultCount" class="count-label">0 events</span>
+        </div>
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Search messages, services, timestamps..." aria-label="Search logs">
+          <select id="severityFilter" aria-label="Filter by severity">
+            <option value="ALL">All severities</option>
+            <option value="ERROR">Errors</option>
+            <option value="WARN">Warnings</option>
+            <option value="INFO">Info</option>
+            <option value="DEBUG">Debug</option>
+          </select>
+          <button id="clearFiltersBtn" class="button button-secondary" type="button">Clear filters</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Timestamp</th><th>Severity</th><th>Service</th><th>Message</th></tr></thead>
+            <tbody id="logTable"><tr><td colspan="4" class="empty">Upload a log file to start investigating.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
 
-                <button type="button" id="clearFilters" class="secondary-button">
-                    Clear filters
-                </button>
-            </div>
+      <section class="panel timeline-panel">
+        <div class="section-heading">
+          <div><h2>Incident Timeline</h2><p>Trace events in chronological order.</p></div>
+          <span id="timelineCount" class="count-label">0 events</span>
+        </div>
+        <div id="timeline" class="timeline"><p class="empty">Load logs to generate an incident timeline.</p></div>
+      </section>
 
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Severity</th>
-                            <th>Service</th>
-                            <th>Message</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logTable">
-                        <tr>
-                            <td colspan="4" class="empty">
-                                Upload a log file to start investigating.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+      <section class="panel correlation-panel">
+        <div class="section-heading">
+          <div><h2>Incident Correlation</h2><p>Group significant events that occur close together in time.</p></div>
+          <span id="correlationCount" class="count-label">0 incidents</span>
+        </div>
+        <div class="correlation-note">Rule: error and warning events within a five-minute window are grouped together. Correlation suggests a relationship; it does not prove causation.</div>
+        <div id="correlationResults" class="correlation-results"><p class="empty">Load logs to discover related events.</p></div>
+      </section>
 
-        <section class="panel timeline-panel">
-            <div class="section-heading">
-                <div>
-                    <h2>Incident Timeline</h2>
-                    <p>Trace events leading up to a potential failure.</p>
-                </div>
-                <span id="timelineCount" class="count-label">0 events</span>
-            </div>
+      <section class="panel analysis-panel">
+        <div class="section-heading">
+          <div><h2>Root Cause Analysis</h2><p>Rule-based hypotheses inferred from observed log events.</p></div>
+          <span class="analysis-tag">RULE-BASED</span>
+        </div>
+        <div id="rootCause" class="root-cause"><p class="empty">Load logs to generate potential root-cause hypotheses.</p></div>
+      </section>
 
-            <div id="timeline" class="timeline">
-                <p class="empty">Upload logs to generate an incident timeline.</p>
-            </div>
-        </section>
-
-        <section class="panel analysis-panel">
-            <div class="section-heading">
-                <div>
-                    <h2>Root Cause Analysis</h2>
-                    <p>Potential causes inferred from observed log events.</p>
-                </div>
-                <span class="analysis-tag">RULE-BASED</span>
-            </div>
-
-            <div id="rootCause" class="root-cause">
-                <p class="empty">
-                    Upload logs to generate potential root-cause hypotheses.
-                </p>
-            </div>
-        </section>
-
-        <footer>
-            <span class="footer-brand">IncidentIQ</span>
-            <span class="footer-separator">·</span>
-            Local investigation workspace
-            <span class="footer-right">Built for incident analysis</span>
-        </footer>
-
+      <footer><span class="footer-brand">IncidentIQ</span><span class="footer-separator">·</span><span>Local investigation workspace</span><span class="footer-right">Built for incident analysis</span></footer>
     </main>
-
-    <script src="script.js"></script>
+  </div>
 </body>
 </html>

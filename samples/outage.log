@@ -6,3 +6,7 @@
 2026-10-21 10:02:06 INFO api Health check completed
 2026-10-21 10:02:07 WARN database Connection retry initiated
 2026-10-21 10:02:08 ERROR database Connection attempt failed
+2026-10-21 10:06:20 INFO worker Scheduled job started
+2026-10-21 10:06:21 WARN worker Queue depth above threshold
+2026-10-21 10:06:25 ERROR worker Job processing failed: dependency timeout
+2026-10-21 10:07:01 INFO api Request recovered
