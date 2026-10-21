@@ -1,0 +1,8 @@
+2026-10-21 10:02:01 INFO api Request received
+2026-10-21 10:02:02 ERROR database Connection pool exhausted
+2026-10-21 10:02:03 ERROR api Database query timed out
+2026-10-21 10:02:04 WARN api Response latency above threshold
+2026-10-21 10:02:05 ERROR gateway Upstream request failed: 504
+2026-10-21 10:02:06 INFO api Health check completed
+2026-10-21 10:02:07 WARN database Connection retry initiated
+2026-10-21 10:02:08 ERROR database Connection attempt failed

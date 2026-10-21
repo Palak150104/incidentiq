@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IncidentIQ helps investigate application logs, trace errors, and identify potential root causes.">
+    <title>IncidentIQ | Incident Investigator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <a href="#" class="brand">Incident<span>IQ</span></a>
+        <p class="brand-description">Production Incident Investigator</p>
+        <div class="status">
+            <span class="status-dot"></span>
+            Local Workspace
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <p class="eyebrow">OBSERVABILITY PLATFORM</p>
+            <h1>Understand what went wrong.</h1>
+            <p>Investigate logs, trace failures, and uncover potential root causes.</p>
+        </section>
+
+        <section class="stats">
+            <article class="stat-card">
+                <p>Total Events</p>
+                <h2 id="totalEvents">0</h2>
+                <span>Parsed log entries</span>
+            </article>
+
+            <article class="stat-card">
+                <p>Errors</p>
+                <h2 id="errorCount" class="red-text">0</h2>
+                <span>Requires investigation</span>
+            </article>
+
+            <article class="stat-card">
+                <p>Warnings</p>
+                <h2 id="warningCount" class="yellow-text">0</h2>
+                <span>Potential issues</span>
+            </article>
+
+            <article class="stat-card">
+                <p>Services Affected</p>
+                <h2 id="serviceCount">0</h2>
+                <span>Unique services detected</span>
+            </article>
+        </section>
+
+        <section class="panel upload-panel">
+            <div class="upload-info">
+                <div class="upload-icon">↑</div>
+                <div>
+                    <h2>Import log files</h2>
+                    <p>Upload a .log or .txt file to begin your investigation.</p>
+                </div>
+            </div>
+
+            <label for="logFile" class="primary-button">
+                + Upload Logs
+            </label>
+            <input type="file" id="logFile" accept=".log,.txt" hidden>
+        </section>
+
+        <div id="fileStatus" class="file-status" role="status">
+            No log file loaded.
+        </div>
+
+        <section class="panel explorer-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Log Explorer</h2>
+                    <p>Search and filter application events.</p>
+                </div>
+                <span id="resultCount" class="count-label">0 events</span>
+            </div>
+
+            <div class="filters">
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search messages, services, errors..."
+                    aria-label="Search log events"
+                >
+
+                <select id="severityFilter" aria-label="Filter by severity">
+                    <option value="ALL">All severities</option>
+                    <option value="ERROR">Errors</option>
+                    <option value="WARN">Warnings</option>
+                    <option value="INFO">Info</option>
+                    <option value="DEBUG">Debug</option>
+                </select>
+
+                <button type="button" id="clearFilters" class="secondary-button">
+                    Clear filters
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Severity</th>
+                            <th>Service</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTable">
+                        <tr>
+                            <td colspan="4" class="empty">
+                                Upload a log file to start investigating.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel timeline-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Incident Timeline</h2>
+                    <p>Trace events leading up to a potential failure.</p>
+                </div>
+                <span id="timelineCount" class="count-label">0 events</span>
+            </div>
+
+            <div id="timeline" class="timeline">
+                <p class="empty">Upload logs to generate an incident timeline.</p>
+            </div>
+        </section>
+
+        <section class="panel analysis-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Root Cause Analysis</h2>
+                    <p>Potential causes inferred from observed log events.</p>
+                </div>
+                <span class="analysis-tag">RULE-BASED</span>
+            </div>
+
+            <div id="rootCause" class="root-cause">
+                <p class="empty">
+                    Upload logs to generate potential root-cause hypotheses.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <span class="footer-brand">IncidentIQ</span>
+            <span class="footer-separator">·</span>
+            Local investigation workspace
+            <span class="footer-right">Built for incident analysis</span>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
